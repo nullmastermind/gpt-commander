@@ -9,6 +9,7 @@ edition = "2021"
 openai-api-rs = "4.0.7"
 anyhow = "1.0"
 clipboard-rs = "0.1"
+chrono = "0.4.34"
 
 [dependencies.eframe]
 version = "0.26.2"
