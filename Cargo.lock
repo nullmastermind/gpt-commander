@@ -1488,6 +1488,7 @@ dependencies = [
  "chrono",
  "clipboard-rs",
  "eframe",
+ "image",
  "openai-api-rs",
  "windows 0.52.0",
 ]

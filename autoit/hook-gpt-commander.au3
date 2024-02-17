@@ -1,3 +1,5 @@
+#AutoIt3Wrapper_icon=icon.ico
+
 #include <GUIConstantsEx.au3>
 #include <WindowsConstants.au3>
 #include <MsgBoxConstants.au3>

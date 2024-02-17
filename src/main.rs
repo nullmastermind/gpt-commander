@@ -33,7 +33,8 @@ fn main() -> Result<(), eframe::Error> {
             .with_active(true)
             .with_maximize_button(false)
             .with_minimize_button(false)
-            .with_position(window_position),
+            .with_position(window_position)
+            .with_icon(load_icon()),
         follow_system_theme: true,
         centered: window_position.x < 0f32 || window_position.y < 0f32,
         ..Default::default()
@@ -292,4 +293,22 @@ fn send_request(content: String) -> anyhow::Result<String> {
     }
 
     Ok(<Option<String> as Clone>::clone(&result?.choices[0].message.content).unwrap())
+}
+
+fn load_icon() -> IconData {
+    let (icon_rgba, icon_width, icon_height) = {
+        let icon = include_bytes!("../autoit/icon.ico");
+        let image = image::load_from_memory(icon)
+            .expect("Failed to open icon path")
+            .into_rgba8();
+        let (width, height) = image.dimensions();
+        let rgba = image.into_raw();
+        (rgba, width, height)
+    };
+
+    IconData {
+        rgba: icon_rgba,
+        width: icon_width,
+        height: icon_height,
+    }
 }
