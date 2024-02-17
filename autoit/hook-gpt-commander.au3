@@ -9,17 +9,24 @@ Func HandleHotKey()
     Send("^c")
     Local $sOldClipboard = ClipGet()
     Local $aMousePos = MouseGetPos() ; Retrieve mouse position
-    $aMousePos[0] -= 310
-    If $aMousePos[0] < 0 Then
-        $aMousePos[0] = 0
+
+    Local $iScreenWidth = @DesktopWidth - 350
+    If $aMousePos[0] > $iScreenWidth Then
+        $aMousePos[0] = $iScreenWidth
     EndIf
+    
+    $aMousePos[1] -= 200
+    If $aMousePos[1] < 0 Then
+        $aMousePos[1] = 0
+    EndIf
+
     Local $sCmd = ".\gpt-commander.exe " & $aMousePos[0] & " " & $aMousePos[1] ; Construct command with arguments
     RunWait($sCmd, @ScriptDir, @SW_SHOW) ; Run the program with mouse position as arguments
     Local $sNewClipboard = ClipGet()
     If $sOldClipboard <> $sNewClipboard Then
         Send("^v")
     EndIf
-    ClipPut($ssOldClipboard)
+    ;~ ClipPut($ssOldClipboard)
 EndFunc
 
 ; Main script loop
