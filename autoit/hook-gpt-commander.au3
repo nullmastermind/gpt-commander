@@ -8,6 +8,13 @@ Func HandleHotKey()
     Local $ssOldClipboard = ClipGet()
     Send("^c")
     Local $sOldClipboard = ClipGet()
+
+    If $sOldClipboard = $ssOldClipboard Then
+        Send("^a")
+        Send("^c")
+        $sOldClipboard = ClipGet()
+    EndIf
+
     Local $aMousePos = MouseGetPos() ; Retrieve mouse position
 
     Local $iScreenWidth = @DesktopWidth - 350
