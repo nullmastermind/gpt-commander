@@ -1,8 +1,12 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")] // hide console window on Windows in release
 
+use chrono::Utc;
+use std::fs::File;
+use std::io::Write;
+use std::path::Path;
 use std::sync::{Arc, Mutex};
 use std::time::Duration;
-use std::{env, thread};
+use std::{env, fs, thread};
 
 use clipboard_rs::{Clipboard, ClipboardContext};
 use eframe::egui;
@@ -44,6 +48,7 @@ fn main() -> Result<(), eframe::Error> {
 struct MyApp {
     response: Arc<Mutex<String>>,
     clipboard_ctx: ClipboardContext,
+    user_content: String,
     is_sent: bool,
 }
 
@@ -52,6 +57,7 @@ impl Default for MyApp {
         Self {
             response: Arc::new(Mutex::new("".to_string())),
             clipboard_ctx: ClipboardContext::new().unwrap(),
+            user_content: "".to_string(),
             is_sent: false,
         }
     }
@@ -113,12 +119,35 @@ impl eframe::App for MyApp {
             ui.separator();
             ui.horizontal(|ui| {
                 if ui
-                    .add(egui::Button::new("A-OK-dokie").fill(egui::Color32::from_rgb(22, 90, 76)))
+                    .add(Button::new("A-OK-dokie").fill(Color32::from_rgb(22, 90, 76)))
                     .clicked()
                 {
-                    self.clipboard_ctx
-                        .set_text(self.response.lock().unwrap().clone())
-                        .unwrap();
+                    let improve_text = self.response.lock().unwrap().clone();
+                    self.clipboard_ctx.set_text(improve_text.clone()).unwrap();
+
+                    let current_time = Utc::now().timestamp_millis();
+
+                    // Ensure 'history' directory exists
+                    fs::create_dir_all("history").unwrap_or_default();
+
+                    // Save self.user_content
+                    let user_file_path =
+                        Path::new("history").join(format!("{}_user.txt", current_time));
+                    let mut user_file =
+                        File::create(&user_file_path).expect("Could not create file");
+                    user_file
+                        .write_all(self.user_content.as_bytes())
+                        .expect("Could not write to file");
+
+                    // Save improve_text
+                    let assistant_file_path =
+                        Path::new("history").join(format!("{}_assistant.txt", current_time));
+                    let mut assistant_file =
+                        File::create(&assistant_file_path).expect("Could not create file");
+                    assistant_file
+                        .write_all(improve_text.as_bytes())
+                        .expect("Could not write to file");
+
                     std::process::exit(0);
                 }
                 // if ui.button("Retry").clicked() {
@@ -136,9 +165,12 @@ impl eframe::App for MyApp {
         if !self.is_sent {
             self.is_sent = true;
             let response_clone = Arc::clone(&self.response);
+            let content = self.get_clipboard_content();
+
+            self.user_content = content.clone();
 
             thread::spawn(move || {
-                let result = send_request();
+                let result = send_request(content);
                 if let Ok(data) = result {
                     let mut response = response_clone.lock().unwrap();
                     *response = data;
@@ -148,9 +180,13 @@ impl eframe::App for MyApp {
     }
 }
 
-fn send_request() -> anyhow::Result<String> {
-    let clipboard_ctx = ClipboardContext::new().unwrap();
-    let content = clipboard_ctx.get_text().unwrap();
+impl MyApp {
+    fn get_clipboard_content(&self) -> String {
+        return self.clipboard_ctx.get_text().unwrap_or("".to_string());
+    }
+}
+
+fn send_request(content: String) -> anyhow::Result<String> {
     let mut req = ChatCompletionRequest::new(
     GPT3_5_TURBO.to_string(),
     vec![
@@ -250,7 +286,7 @@ fn send_request() -> anyhow::Result<String> {
     let result = client.chat_completion(req);
 
     if result.is_err() {
-      return Ok("An error occurred while calling the OpenAI API.".to_string());
+        return Ok("An error occurred while calling the OpenAI API.".to_string());
     }
 
     Ok(<Option<String> as Clone>::clone(&result?.choices[0].message.content).unwrap())
