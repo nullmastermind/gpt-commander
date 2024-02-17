@@ -18,6 +18,6 @@ GPT Commander is a powerful tool for enhancing text understanding in chatbots. T
 
 ## Important Note
 
-Ensure that both `gpt-commander.exe` and `hook-gpt-commander.exe` are in the same directory before running `hook-gpt-commander.exe`.
+Make sure that both `gpt-commander.exe` and `hook-gpt-commander.exe` are in the same directory before running `hook-gpt-commander.exe`. Also, ensure that the `OPENAI_API_KEY` variable exists on your system.
 
 Feel free to reach out if you encounter any issues during the download or setup process.
