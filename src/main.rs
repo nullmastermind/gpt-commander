@@ -125,28 +125,30 @@ impl eframe::App for MyApp {
                     let improve_text = self.response.lock().unwrap().clone();
                     self.clipboard_ctx.set_text(improve_text.clone()).unwrap();
 
-                    let current_time = Utc::now().timestamp_millis();
+                    if self.user_content.len() > 0 && improve_text.len() > 0 {
+                        let current_time = Utc::now().timestamp_millis();
 
-                    // Ensure 'history' directory exists
-                    fs::create_dir_all("history").unwrap_or_default();
+                        // Ensure 'history' directory exists
+                        fs::create_dir_all("history").unwrap_or_default();
 
-                    // Save self.user_content
-                    let user_file_path =
-                        Path::new("history").join(format!("{}_user.txt", current_time));
-                    let mut user_file =
-                        File::create(&user_file_path).expect("Could not create file");
-                    user_file
-                        .write_all(self.user_content.as_bytes())
-                        .expect("Could not write to file");
+                        // Save self.user_content
+                        let user_file_path =
+                            Path::new("history").join(format!("{}_user.txt", current_time));
+                        let mut user_file =
+                            File::create(&user_file_path).expect("Could not create file");
+                        user_file
+                            .write_all(self.user_content.as_bytes())
+                            .expect("Could not write to file");
 
-                    // Save improve_text
-                    let assistant_file_path =
-                        Path::new("history").join(format!("{}_assistant.txt", current_time));
-                    let mut assistant_file =
-                        File::create(&assistant_file_path).expect("Could not create file");
-                    assistant_file
-                        .write_all(improve_text.as_bytes())
-                        .expect("Could not write to file");
+                        // Save improve_text
+                        let assistant_file_path =
+                            Path::new("history").join(format!("{}_assistant.txt", current_time));
+                        let mut assistant_file =
+                            File::create(&assistant_file_path).expect("Could not create file");
+                        assistant_file
+                            .write_all(improve_text.as_bytes())
+                            .expect("Could not write to file");
+                    }
 
                     std::process::exit(0);
                 }
