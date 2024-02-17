@@ -25,8 +25,9 @@ Func HandleHotKey()
     Local $sNewClipboard = ClipGet()
     If $sOldClipboard <> $sNewClipboard Then
         Send("^v")
+    Else
+        ClipPut($ssOldClipboard)
     EndIf
-    ;~ ClipPut($ssOldClipboard)
 EndFunc
 
 ; Main script loop
