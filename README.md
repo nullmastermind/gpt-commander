@@ -12,8 +12,9 @@ GPT Commander is a powerful tool for enhancing text understanding in chatbots. T
 
 ## Usage Instructions
 
-1. After placing both files in the same directory, run `hook-gpt-commander.exe`.
-2. Select text and press F2 to handle your selected text.
+1. Make sure the `OPENAI_API_KEY` variable exists on your system.
+2. After placing both files in the same directory, run `hook-gpt-commander.exe`.
+3. Select text and press F2 to handle your selected text.
 
 ## Important Note
 
