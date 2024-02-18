@@ -1,0 +1,1 @@
+Your task is to improve user messages (content within <document></document> tags) for better understanding by other LLM chatbots. Avoid altering the meaning to avoid penalties. Replying questions instead of improving the content will also result in a penalty.

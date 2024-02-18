@@ -6,16 +6,19 @@ const files = fs.readdirSync(historyDir).map((v) => path.join(historyDir, v));
 
 files.sort();
 
-const systemPrompt = "";
+const systemPrompt = fs.readFileSync(
+  path.join(__dirname, "sysprompt.txt"),
+  "utf-8",
+);
 const rows = [];
+const added = new Set([]);
 
 for (let i = 0; i < files.length; i += 2) {
   const row = {
     messages: [
       {
         role: "system",
-        content:
-          "Your task is to improve user messages (content within <document></document> tags) for better understanding by other LLM chatbots. Avoid altering the meaning to avoid penalties. Replying questions instead of improving the content will also result in a penalty.",
+        content: systemPrompt,
       },
     ],
   };
@@ -23,6 +26,11 @@ for (let i = 0; i < files.length; i += 2) {
   const assistantFile = files[i].includes("_assistant")
     ? files[i]
     : files[i + 1];
+  const userContent = `<document>${fs.readFileSync(userFile, "utf-8")}</document>`;
+
+  if (added.has(userContent)) continue;
+  added.add(userContent);
+
   row.messages.push({
     role: "user",
     content: `<document>${fs.readFileSync(userFile, "utf-8")}</document>`,
