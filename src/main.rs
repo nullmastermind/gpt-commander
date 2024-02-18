@@ -14,7 +14,6 @@ use egui::{containers::*, *};
 use openai_api_rs::v1::api::Client;
 use openai_api_rs::v1::chat_completion;
 use openai_api_rs::v1::chat_completion::ChatCompletionRequest;
-use openai_api_rs::v1::common::GPT3_5_TURBO;
 
 fn main() -> Result<(), eframe::Error> {
     let args: Vec<String> = env::args().collect();
@@ -190,8 +189,8 @@ impl MyApp {
 }
 
 fn send_request(content: String) -> anyhow::Result<String> {
-    let mut req = ChatCompletionRequest::new(
-    GPT3_5_TURBO.to_string(),
+    let model = env::var("GPT_COMMANDER_MODEL").unwrap_or("gpt-3.5-turbo".to_string());
+    let mut req = ChatCompletionRequest::new(model,
     vec![
       chat_completion::ChatCompletionMessage {
         role: chat_completion::MessageRole::system,
