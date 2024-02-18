@@ -39,9 +39,38 @@ for (let i = 0; i < files.length; i += 2) {
     role: "assistant",
     content: fs.readFileSync(assistantFile, "utf-8"),
   });
+
   rows.push(JSON.stringify(row));
 }
 
-fs.writeFileSync("fine_tuning.jsonl", rows.join("\n"));
+const totalValidateItems = Math.ceil(rows.length / 10);
+const validates = fs
+  .readFileSync("fine_tuning_validate.jsonl", "utf-8")
+  .split("\n")
+  .map((v) => v.trim())
+  .filter((v) => !!v)
+  .map((v) => JSON.parse(v))
+  .map((v) => {
+    v.messages[0].content = systemPrompt;
+    return JSON.stringify(v);
+  });
+
+function randomRange(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+while (validates.length < totalValidateItems) {
+  const getIndex = randomRange(0, rows.length);
+  let removedItem = rows.splice(getIndex, 1)[0];
+  if (!validates.includes(removedItem)) {
+    validates.push(removedItem);
+  }
+}
+
+fs.writeFileSync(
+  "fine_tuning.jsonl",
+  rows.filter((v) => !validates.includes(v)).join("\n"),
+);
+fs.writeFileSync("fine_tuning_validate.jsonl", validates.join("\n"));
 
 console.log("DONE.");
