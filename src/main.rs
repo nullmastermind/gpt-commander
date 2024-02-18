@@ -271,7 +271,7 @@ fn send_request(content: String) -> anyhow::Result<String> {
       //
       chat_completion::ChatCompletionMessage {
         role: chat_completion::MessageRole::user,
-        content: chat_completion::Content::Text(format!("<document>{}</document", content)),
+        content: chat_completion::Content::Text(format!("<document>{}</document>", content)),
         name: None,
       },
     ],
