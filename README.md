@@ -20,4 +20,6 @@ GPT Commander is a powerful tool for enhancing text understanding in chatbots. T
 
 Make sure that both `gpt-commander.exe` and `hook-gpt-commander.exe` are in the same directory before running `hook-gpt-commander.exe`. Also, ensure that the `OPENAI_API_KEY` variable exists on your system.
 
+For better results, consider training a custom model using your fine-tuning data. For example, the file can be found here: [fine_tuning.jsonl](https://github.com/nullmastermind/gpt-commander/blob/master/autoit/fine-tuning/fine_tuning.jsonl)
+
 Feel free to reach out if you encounter any issues during the download or setup process.
