@@ -194,7 +194,7 @@ fn send_request(content: String) -> anyhow::Result<String> {
     vec![
       chat_completion::ChatCompletionMessage {
         role: chat_completion::MessageRole::system,
-        content: chat_completion::Content::Text(String::from("Your task is to improve user messages (content within <document></document> tags) for better understanding by other LLM chatbots. Avoid altering the meaning to avoid penalties. Replying questions instead of improving the content will also result in a penalty.")),
+        content: chat_completion::Content::Text(String::from(include_str!("../autoit/fine-tuning/sysprompt.txt"))),
         name: None,
       },
       chat_completion::ChatCompletionMessage {
