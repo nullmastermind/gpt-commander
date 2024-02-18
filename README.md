@@ -4,7 +4,7 @@ GPT Commander is a powerful tool for enhancing text understanding in chatbots. T
 
 ## Download Instructions
 
-1. Visit the [GPT Commander release page](https://github.com/nullmastermind/gpt-commander/releases/tag/1.0.2).
+1. Visit the [GPT Commander release page](https://github.com/nullmastermind/gpt-commander/releases).
 2. Download the following two files:
    - `gpt-commander.exe`
    - `hook-gpt-commander.exe`
