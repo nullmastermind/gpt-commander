@@ -5,5 +5,8 @@
   "license": "MIT",
   "devDependencies": {
     "prettier": "^3.2.5"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.12"
   }
 }
