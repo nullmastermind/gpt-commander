@@ -6,10 +6,7 @@ const files = fs.readdirSync(historyDir).map((v) => path.join(historyDir, v));
 
 files.sort();
 
-const systemPrompt = fs.readFileSync(
-  path.join(__dirname, "sysprompt.txt"),
-  "utf-8",
-);
+const systemPrompt = fs.readFileSync(path.join(__dirname, "sysprompt.txt"), "utf-8");
 const rows = [];
 const added = new Set([]);
 
@@ -23,9 +20,7 @@ for (let i = 0; i < files.length; i += 2) {
     ],
   };
   const userFile = files[i].includes("_user") ? files[i] : files[i + 1];
-  const assistantFile = files[i].includes("_assistant")
-    ? files[i]
-    : files[i + 1];
+  const assistantFile = files[i].includes("_assistant") ? files[i] : files[i + 1];
   const userContent = `<document>${fs.readFileSync(userFile, "utf-8")}</document>`;
 
   if (added.has(userContent)) continue;
@@ -67,10 +62,7 @@ while (validates.length < totalValidateItems) {
   }
 }
 
-fs.writeFileSync(
-  "fine_tuning.jsonl",
-  rows.filter((v) => !validates.includes(v)).join("\n"),
-);
+fs.writeFileSync("fine_tuning.jsonl", rows.filter((v) => !validates.includes(v)).join("\n"));
 fs.writeFileSync("fine_tuning_validate.jsonl", validates.join("\n"));
 
 console.log("DONE.");
